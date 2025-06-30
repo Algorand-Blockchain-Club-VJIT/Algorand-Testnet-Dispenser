@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import algorandLogo from '../assets/react.svg' // Assume you have a logo SVG
+import algorandLogo from '/algorand.svg' // Assume you have a logo SVG
 
 const Home = () => {
   return (
