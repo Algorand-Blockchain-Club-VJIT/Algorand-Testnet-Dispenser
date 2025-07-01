@@ -16,4 +16,5 @@ jobs:
           git config --global user.name "Vijay Guttula"
           git config --global user.email "vijayguttula001@gmail.com"
           git remote add org https://x-access-token:${{ secrets.ORG_REPO_TOKEN }}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
-          git push org HEAD:main --force
+          git push org HEAD:main --force-with-lease    
+## '--force-with-lease' for safer force pushes
