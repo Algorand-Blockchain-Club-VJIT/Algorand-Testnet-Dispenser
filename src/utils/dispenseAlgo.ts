@@ -8,7 +8,7 @@ const algodClient = new algosdk.Algodv2(
 )
 
 // Replace with your dispenser mnemonic
-const DISPENSER_MNEMONIC = "your mnemonic here"
+const DISPENSER_MNEMONIC = import.meta.env.VITE_DISPENSER_MNEMONIC!
 const dispenserAccount = algosdk.mnemonicToSecretKey(DISPENSER_MNEMONIC)
 
 export async function sendAlgo(receiver: string, amount = 100_000) {
