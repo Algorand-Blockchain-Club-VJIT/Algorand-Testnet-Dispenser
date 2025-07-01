@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { PeraWalletConnect } from "@perawallet/connect"
@@ -8,7 +7,6 @@ const peraWallet = new PeraWalletConnect()
 const Navbar = () => {
   const [accountAddress, setAccountAddress] = useState<string | null>(null)
 
-  // Auto reconnect on refresh
   useEffect(() => {
     peraWallet.reconnectSession().then((accounts) => {
       if (accounts.length) {
@@ -27,7 +25,6 @@ const Navbar = () => {
         setAccountAddress(accounts[0])
       }
 
-      // Handle disconnect
       peraWallet.connector?.on("disconnect", () => {
         setAccountAddress(null)
       })
