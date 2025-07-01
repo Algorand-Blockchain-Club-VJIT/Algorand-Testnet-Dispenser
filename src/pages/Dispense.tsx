@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { sendAlgo } from "../utils/dispenseAlgo"
 import { PeraWalletConnect } from "@perawallet/connect"
+import ReCAPTCHA from "react-google-recaptcha"
 
 const peraWallet = new PeraWalletConnect()
+const SITE_KEY = "your-site-key" // <-- Replace with your Google reCAPTCHA site key (v2 checkbox)
 
 const Dispense = () => {
   const [connectedAddress, setConnectedAddress] = useState<string | null>(null)
   const [manualAddress, setManualAddress] = useState("")
   const [status, setStatus] = useState("")
   const [loading, setLoading] = useState(false)
+  const [verified, setVerified] = useState(false)
+
+  const captchaRef = useRef<ReCAPTCHA>(null)
 
   useEffect(() => {
     peraWallet.reconnectSession().then((accounts) => {
@@ -22,7 +27,11 @@ const Dispense = () => {
   }, [])
 
   const handleDispense = async (address: string) => {
-    console.log("Trying to send to:", address)
+    if (!verified) {
+      setStatus("❌ Please complete the CAPTCHA")
+      return
+    }
+
     if (!address || address.length !== 58) {
       setStatus("❌ Invalid Algorand address")
       return
@@ -45,12 +54,21 @@ const Dispense = () => {
     }
 
     setLoading(false)
+    setVerified(false)
+    captchaRef.current?.reset()
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md text-center space-y-6">
         <h1 className="text-2xl font-bold text-teal-600">🚰 Testnet Dispenser</h1>
+
+        <ReCAPTCHA
+          sitekey={SITE_KEY}
+          onChange={() => setVerified(true)}
+          onExpired={() => setVerified(false)}
+          ref={captchaRef}
+        />
 
         {connectedAddress ? (
           <>
@@ -59,7 +77,7 @@ const Dispense = () => {
             </p>
             <button
               onClick={() => handleDispense(connectedAddress)}
-              disabled={loading}
+              disabled={loading || !verified}
               className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
             >
               {loading ? "Sending..." : "Send 0.1 ALGO"}
@@ -76,7 +94,7 @@ const Dispense = () => {
             />
             <button
               onClick={() => handleDispense(manualAddress)}
-              disabled={loading}
+              disabled={loading || !verified}
               className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
             >
               {loading ? "Sending..." : "Send 0.1 ALGO"}
