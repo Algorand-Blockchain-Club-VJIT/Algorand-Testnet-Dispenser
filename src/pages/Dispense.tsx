@@ -10,7 +10,6 @@ const Dispense = () => {
   const [status, setStatus] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // Auto-reconnect to Pera wallet
   useEffect(() => {
     peraWallet.reconnectSession().then((accounts) => {
       if (accounts.length) {
@@ -22,15 +21,10 @@ const Dispense = () => {
     })
   }, [])
 
-  const handleDispense = async (addressToSend: string) => {
-    if (!addressToSend || addressToSend.length !== 58) {
+  const handleDispense = async (address: string) => {
+    console.log("Trying to send to:", address)
+    if (!address || address.length !== 58) {
       setStatus("❌ Invalid Algorand address")
-      return
-    }
-
-    // Ensure no accidental undefined
-    if (typeof addressToSend !== "string" || addressToSend.trim() === "") {
-      setStatus("❌ Address is empty or invalid")
       return
     }
 
@@ -38,14 +32,16 @@ const Dispense = () => {
     setStatus("Sending...")
 
     try {
-      const { success, txId, error }: any = await sendAlgo(addressToSend)
-      if (success) {
-        setStatus(`✅ Sent successfully! Tx ID: ${txId}`)
+      const result = await sendAlgo(address)
+      if (result.success) {
+        setStatus(`✅ Success! Tx ID: ${result.txId}`)
+      } else if (result.error instanceof Error) {
+        setStatus(`❌ Failed: ${result.error.message}`)
       } else {
-        setStatus(`❌ Error: ${error?.message || "Transaction failed"}`)
+        setStatus("❌ Failed: Unknown error")
       }
     } catch (err: any) {
-      setStatus(`❌ ${err.message}`)
+      setStatus(`❌ Exception: ${err.message}`)
     }
 
     setLoading(false)
@@ -54,27 +50,26 @@ const Dispense = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md text-center space-y-6">
-        <h1 className="text-2xl font-bold text-teal-600">🚰 Dispense Testnet ALGO</h1>
+        <h1 className="text-2xl font-bold text-teal-600">🚰 Testnet Dispenser</h1>
 
         {connectedAddress ? (
           <>
             <p className="text-sm text-gray-700">
-              Connected wallet:{" "}
-              <span className="font-mono">{connectedAddress}</span>
+              Connected wallet: <span className="font-mono">{connectedAddress}</span>
             </p>
             <button
               onClick={() => handleDispense(connectedAddress)}
               disabled={loading}
               className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
             >
-              {loading ? "Sending..." : "Dispense 0.1 ALGO"}
+              {loading ? "Sending..." : "Send 0.1 ALGO"}
             </button>
           </>
         ) : (
           <>
             <input
               type="text"
-              placeholder="Enter your Algorand Testnet address"
+              placeholder="Enter Algorand Testnet address"
               value={manualAddress}
               onChange={(e) => setManualAddress(e.target.value)}
               className="w-full border px-4 py-2 rounded"
@@ -84,7 +79,7 @@ const Dispense = () => {
               disabled={loading}
               className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
             >
-              {loading ? "Sending..." : "Dispense 0.1 ALGO"}
+              {loading ? "Sending..." : "Send 0.1 ALGO"}
             </button>
           </>
         )}
