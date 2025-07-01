@@ -43,9 +43,9 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
-      <div className="text-2xl font-bold text-teal-700">
+      <Link to="/" className="text-2xl font-bold text-teal-700 hover:opacity-80">
         Algorand Testnet Dispenser
-      </div>
+      </Link>
 
       <div className="space-x-6 text-sm font-medium flex items-center">
         <Link to="/" className="text-gray-700 hover:text-teal-600 transition">
