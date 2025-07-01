@@ -2,7 +2,7 @@ name: Mirror to Org Repo
 
 on:
   push:
-    branches: [main]  # Change if you want to sync other branches
+    branches: [main]  # Change this to your source branch if needed
 
 jobs:
   mirror:
@@ -16,12 +16,21 @@ jobs:
         env:
           ORG_REPO_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
         run: |
+          # Configure Git identity
           git config --global user.name "Vijay Guttula"
           git config --global user.email "vijayguttula001@gmail.com"
 
-          git remote remove org || true
+          echo "Remotes before removing org:"
+          git remote -v
+
+          # Remove the org remote if it exists (ignore errors)
+          git remote remove org || echo "No org remote to remove"
+
+          # Add org remote with PAT embedded for auth
           git remote add org https://x-access-token:${ORG_REPO_TOKEN}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
 
-          git remote -v  # Just to confirm remote URLs
+          echo "Remotes after adding org:"
+          git remote -v
 
+          # Push changes to org repo's main branch using safer force push
           git push org HEAD:main --force-with-lease
