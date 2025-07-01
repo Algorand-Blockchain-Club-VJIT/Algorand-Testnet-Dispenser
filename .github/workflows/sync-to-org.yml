@@ -2,38 +2,29 @@ name: Mirror to Org Repo
 
 on:
   push:
-    branches: [main]  # Change this to your source branch if needed
+    branches: [main]
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code without credentials
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false   # <- Important!
 
-      - name: Configure Git and Push to Org Repo
+      - name: Push to Org Repo
         env:
           ORG_REPO_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
         run: |
-          # Configure Git identity
           git config --global user.name "Vijay Guttula"
           git config --global user.email "vijayguttula001@gmail.com"
 
-          echo "Remotes before removing org:"
-          git remote -v
-
-          # Remove the org remote if it exists (ignore errors)
+          # Remove existing 'org' remote if any
           git remote remove org || echo "No org remote to remove"
 
-          # Add org remote with PAT embedded for auth
+          # Add org repo remote with PAT for authentication
           git remote add org https://x-access-token:${ORG_REPO_TOKEN}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
 
-          echo "Remotes after adding org:"
-          git remote -v
-
-          # Disable credential helper to prevent cached creds usage
-          git config --global credential.helper ""
-
-          # Push changes to org repo's main branch using safer force push
           git push org HEAD:main --force-with-lease
