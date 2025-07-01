@@ -1,8 +1,8 @@
-import Navbar from './components/Navbar'; // adjust path if needed
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Dispense from './pages/Dispense'; // create if not yet created
-import Connect from './pages/Connect';   // create if not yet created
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Home from "./pages/Home"
+import Dispense from "./pages/Dispense"
+import Navbar from "./components/Navbar"
 
 function App() {
   return (
@@ -12,11 +12,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dispense" element={<Dispense />} />
-          <Route path="/connect" element={<Connect />} />
         </Routes>
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
