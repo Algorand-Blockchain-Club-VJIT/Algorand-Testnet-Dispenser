@@ -2,19 +2,25 @@ name: Mirror to Org Repo
 
 on:
   push:
-    branches: [main]  # or your branch name
+    branches: [main]  # or your actual source branch
 
 jobs:
   mirror:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Mirror to Org Repo
+        env:
+          ORG_PAT: ${{ secrets.ORG_REPO_TOKEN }}
         run: |
           git config --global user.name "Vijay Guttula"
           git config --global user.email "vijayguttula001@gmail.com"
-          git remote add org https://x-access-token:${{ secrets.ORG_REPO_TOKEN }}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
-          git push org HEAD:main --force-with-lease    
-## '--force-with-lease' for safer force pushes
+
+          git remote add org https://x-access-token:${ORG_PAT}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
+
+          git remote -v  # optional: confirms URL
+
+          git push org HEAD:main --force-with-lease
