@@ -27,4 +27,4 @@ jobs:
           # Add org repo remote with PAT for authentication
           git remote add org https://x-access-token:${ORG_REPO_TOKEN}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
 
-          git push org HEAD:main --force-with-lease
+          git push org HEAD:main --force
