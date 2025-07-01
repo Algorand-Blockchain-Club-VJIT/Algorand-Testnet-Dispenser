@@ -1,0 +1,19 @@
+name: Mirror to Org Repo
+
+on:
+  push:
+    branches: [main]  # or your branch name
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Mirror to Org Repo
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "you@example.com"
+          git remote add org https://x-access-token:${{ secrets.ORG_REPO_TOKEN }}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
+          git push org HEAD:main --force
