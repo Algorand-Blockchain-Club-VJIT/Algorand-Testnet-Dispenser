@@ -7,12 +7,12 @@ on:
 jobs:
   mirror:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code without credentials
+      - name: Checkout code without credentials, full history
         uses: actions/checkout@v4
         with:
-          persist-credentials: false   # <- Important!
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Push to Org Repo
         env:
@@ -21,10 +21,7 @@ jobs:
           git config --global user.name "Vijay Guttula"
           git config --global user.email "vijayguttula001@gmail.com"
 
-          # Remove existing 'org' remote if any
           git remote remove org || echo "No org remote to remove"
-
-          # Add org repo remote with PAT for authentication
           git remote add org https://x-access-token:${ORG_REPO_TOKEN}@github.com/algorand-blockchain-club-vjit/algorand-testnet-dispenser.git
 
           git push org HEAD:main --force
