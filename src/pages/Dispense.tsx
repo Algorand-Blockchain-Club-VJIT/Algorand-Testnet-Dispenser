@@ -32,7 +32,7 @@ const Dispense = () => {
     setStatus("Sending...")
 
     try {
-      const { success, txId, error } = await sendAlgo(addressToSend)
+      const { success, txId, error }: any = await sendAlgo(addressToSend)
       if (success) {
         setStatus(`✅ Sent successfully! Tx ID: ${txId}`)
       } else {
