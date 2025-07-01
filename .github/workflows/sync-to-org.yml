@@ -32,5 +32,8 @@ jobs:
           echo "Remotes after adding org:"
           git remote -v
 
+          # Disable credential helper to prevent cached creds usage
+          git config --global credential.helper ""
+
           # Push changes to org repo's main branch using safer force push
           git push org HEAD:main --force-with-lease
