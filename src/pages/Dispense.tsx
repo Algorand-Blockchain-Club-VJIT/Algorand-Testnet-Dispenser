@@ -28,6 +28,12 @@ const Dispense = () => {
       return
     }
 
+    // Ensure no accidental undefined
+    if (typeof addressToSend !== "string" || addressToSend.trim() === "") {
+      setStatus("❌ Address is empty or invalid")
+      return
+    }
+
     setLoading(true)
     setStatus("Sending...")
 
