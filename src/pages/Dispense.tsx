@@ -80,7 +80,7 @@ const Dispense = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-black via-slate-900 to-[#00D9A7] flex flex-col items-center justify-center px-4 py-20">
-      
+
       {/* CAPTCHA outside glass container */}
       <div className="scale-[0.85] origin-top md:scale-100 z-10 mb-4">
         <ReCAPTCHA
@@ -105,17 +105,18 @@ const Dispense = () => {
         <div className="mt-4 space-y-4">
           {connectedAddress ? (
             <>
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-gray-300 break-words max-w-full">
                 Connected Wallet:{" "}
-                <span className="font-mono text-white">{connectedAddress}</span>
+                <span className="font-mono text-white break-words text-sm block max-w-xs mx-auto">
+                  {connectedAddress}
+                </span>
               </p>
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleDispense(connectedAddress)}
                 disabled={loading || !verified}
-                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${
-                  loading || !verified ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${loading || !verified ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Droplet size={18} />}
                 {loading ? "Sending..." : "Send 0.1 ALGO"}
@@ -134,9 +135,8 @@ const Dispense = () => {
                 whileTap={{ scale: 0.96 }}
                 onClick={() => handleDispense(manualAddress)}
                 disabled={loading || !verified}
-                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${
-                  loading || !verified ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${loading || !verified ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <Droplet size={18} />}
                 {loading ? "Sending..." : "Send 0.1 ALGO"}
