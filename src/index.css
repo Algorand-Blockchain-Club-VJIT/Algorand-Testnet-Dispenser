@@ -1,1 +1,11 @@
 @import "tailwindcss";
+@media (max-width: 360px) {
+  .recaptcha-container {
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+}

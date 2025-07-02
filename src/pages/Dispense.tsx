@@ -79,7 +79,18 @@ const Dispense = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-[#00D9A7] flex items-center justify-center px-4 py-20">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-black via-slate-900 to-[#00D9A7] flex flex-col items-center justify-center px-4 py-20">
+      
+      {/* CAPTCHA outside glass container */}
+      <div className="scale-[0.85] origin-top md:scale-100 z-10 mb-4">
+        <ReCAPTCHA
+          sitekey={SITE_KEY}
+          onChange={() => setVerified(true)}
+          onExpired={() => setVerified(false)}
+          ref={captchaRef}
+        />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -91,14 +102,7 @@ const Dispense = () => {
           Testnet Dispenser
         </div>
 
-        <ReCAPTCHA
-          sitekey={SITE_KEY}
-          onChange={() => setVerified(true)}
-          onExpired={() => setVerified(false)}
-          ref={captchaRef}
-        />
-
-        <div className="mt-6 space-y-4">
+        <div className="mt-4 space-y-4">
           {connectedAddress ? (
             <>
               <p className="text-sm text-gray-300">
