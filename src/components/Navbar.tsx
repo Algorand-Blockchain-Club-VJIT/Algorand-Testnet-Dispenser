@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { PeraWalletConnect } from "@perawallet/connect"
 import { motion } from "framer-motion"
-import { LogIn, LogOut, Droplets } from "lucide-react" // 👈 added icon
+import { LogIn, LogOut, Droplets } from "lucide-react"
 
 const peraWallet = new PeraWalletConnect()
 
 const Navbar = () => {
   const [accountAddress, setAccountAddress] = useState<string | null>(null)
+  const [ , setClicked ] = useState(false)
 
   useEffect(() => {
     peraWallet.reconnectSession().then((accounts) => {
@@ -19,6 +20,7 @@ const Navbar = () => {
   }, [])
 
   const handleConnect = async () => {
+    setClicked(true)
     try {
       const accounts = await peraWallet.connect()
       if (accounts.length > 0) {
@@ -84,12 +86,33 @@ const Navbar = () => {
           </>
         ) : (
           <motion.button
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleConnect}
-            className="flex items-center gap-2 bg-[#00D9A7] text-white px-4 py-2 rounded-full hover:bg-[#00c89d] transition"
+            className="relative flex items-center gap-2 overflow-hidden px-6 py-2 rounded-full bg-[#00D9A7] text-white text-sm font-semibold transition-all duration-300 hover:bg-[#00c89d] focus:outline-none"
           >
-            <LogIn size={18} />
-            Connect Wallet
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: accountAddress ? "0%" : "-100%" }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="absolute inset-0 bg-black/20 z-0"
+            />
+            <motion.div
+              initial={{ x: -10, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="z-10"
+            >
+              <LogIn size={18} />
+            </motion.div>
+            <motion.span
+              initial={{ opacity: 1 }}
+              animate={{ opacity: accountAddress ? 0 : 1 }}
+              transition={{ duration: 0.3 }}
+              className="z-10"
+            >
+              Connect Wallet
+            </motion.span>
           </motion.button>
         )}
       </div>
