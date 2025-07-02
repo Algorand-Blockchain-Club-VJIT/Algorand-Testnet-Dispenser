@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import algorandLogo from "/algorand.svg"
 import { motion } from "framer-motion"
-import { Droplet, Terminal, Rocket, Info, Link as LinkIcon } from "lucide-react"
+import { Droplet, Link as LinkIcon, Rocket, Info, Wrench } from "lucide-react"
 
 const Home = () => {
   return (
@@ -29,7 +29,7 @@ const Home = () => {
               desc: "Instantly receive 0.1 ALGO for testing dApps on Algorand's blazing-fast blockchain.",
             },
             {
-              icon: <Terminal size={28} />,
+              icon: <LinkIcon size={28} />,
               title: "Wallet Integration",
               desc: "Easily connect your wallet via Pera Wallet or paste your Testnet address manually.",
             },
@@ -44,9 +44,9 @@ const Home = () => {
               desc: "Fork it, improve it, remix it — the source is open and community-powered.",
             },
             {
-              icon: <LinkIcon size={28} />,
-              title: "Developer Resources",
-              desc: "Guides, docs, and starter kits using AlgoKit to speed up your dApp journey.",
+              icon: <Wrench size={28} />,
+              title: "Build with AlgoKit",
+              desc: "Kickstart your Algorand dApp using AlgoKit — templates, localnet, testing tools, and more.",
             },
             {
               icon: <Droplet size={28} />,
