@@ -46,3 +46,13 @@ export async function sendAlgo(receiver: string, amount = 100_000) {
     }
   }
 }
+
+export async function getDispenserBalance() {
+  try {
+    const accountInfo = await algodClient.accountInformation(dispenserAccount.addr).do()
+    return Number(accountInfo.amount) / 1e6
+  } catch (error) {
+    console.error("❌ Failed to fetch dispenser balance:", error)
+    return null
+  }
+}

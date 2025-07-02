@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { sendAlgo } from "../utils/dispenseAlgo"
+import { sendAlgo, getDispenserBalance } from "../utils/dispenseAlgo"
 import { PeraWalletConnect } from "@perawallet/connect"
 import ReCAPTCHA from "react-google-recaptcha"
 import { motion } from "framer-motion"
@@ -14,8 +14,12 @@ const Dispense = () => {
   const [status, setStatus] = useState("")
   const [loading, setLoading] = useState(false)
   const [verified, setVerified] = useState(false)
-
+  const [sourceBalance, setSourceBalance] = useState<number | null>(null)
   const captchaRef = useRef<ReCAPTCHA>(null)
+
+  useEffect(() => {
+    getDispenserBalance().then(setSourceBalance)
+  }, [])
 
   useEffect(() => {
     peraWallet.reconnectSession().then((accounts) => {
@@ -64,6 +68,7 @@ const Dispense = () => {
       const result = await sendAlgo(address)
       if (result.success) {
         setStatus(`✅ Success! Tx ID: ${result.txId}`)
+        getDispenserBalance().then(setSourceBalance)
       } else if (result.error instanceof Error) {
         setStatus(`❌ Failed: ${result.error.message}`)
       } else {
@@ -80,8 +85,6 @@ const Dispense = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-black via-slate-900 to-[#00D9A7] flex flex-col items-center justify-center px-4 py-20">
-
-      {/* CAPTCHA outside glass container */}
       <div className="scale-[0.85] origin-top md:scale-100 z-10 mb-4">
         <ReCAPTCHA
           sitekey={SITE_KEY}
@@ -90,7 +93,14 @@ const Dispense = () => {
           ref={captchaRef}
         />
       </div>
-
+      <div className="text-white text-sm font-mono mb-4">
+        Faucet Balance:{" "}
+        {sourceBalance !== null ? (
+          <span className="text-[#00D9A7] font-semibold">{sourceBalance.toFixed(6)} ALGO</span>
+        ) : (
+          <span className="text-red-400">Loading...</span>
+        )}
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -126,7 +136,7 @@ const Dispense = () => {
             <>
               <input
                 type="text"
-                placeholder="Enter Algorand Testnet address"
+                placeholder="Enter Wallet address"
                 value={manualAddress}
                 onChange={(e) => setManualAddress(e.target.value)}
                 className="w-full border border-white/20 bg-white/10 text-white placeholder-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#00D9A7]"
@@ -144,7 +154,6 @@ const Dispense = () => {
             </>
           )}
         </div>
-
         {status && (
           <p className="text-sm text-gray-100 mt-4 break-all font-mono">{status}</p>
         )}
