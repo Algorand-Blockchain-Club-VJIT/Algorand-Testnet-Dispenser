@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react"
 import { sendAlgo } from "../utils/dispenseAlgo"
 import { PeraWalletConnect } from "@perawallet/connect"
 import ReCAPTCHA from "react-google-recaptcha"
+import { motion } from "framer-motion"
+import { Droplet, Loader2 } from "lucide-react"
 
 const peraWallet = new PeraWalletConnect()
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY!
@@ -33,7 +35,6 @@ const Dispense = () => {
       return
     }
 
-    // 🔐 Verify reCAPTCHA token with backend
     try {
       const verifyRes = await fetch("https://algorand-testnet-dispenser-backend.up.railway.app/verify-recaptcha", {
         method: "POST",
@@ -42,7 +43,6 @@ const Dispense = () => {
       })
 
       const verifyData = await verifyRes.json()
-
       if (!verifyData.success) {
         setStatus("❌ CAPTCHA verification failed")
         return
@@ -76,13 +76,20 @@ const Dispense = () => {
     setLoading(false)
     setVerified(false)
     captchaRef.current?.reset()
-    
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md text-center space-y-6">
-        <h1 className="text-2xl font-bold text-teal-600">🚰 Testnet Dispenser</h1>
+    <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-[#00D9A7] flex items-center justify-center px-4 py-20">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md text-center border border-white/10"
+      >
+        <div className="flex items-center justify-center gap-2 text-white text-2xl font-bold mb-4">
+          <Droplet size={28} strokeWidth={2.5} />
+          Testnet Dispenser
+        </div>
 
         <ReCAPTCHA
           sitekey={SITE_KEY}
@@ -91,40 +98,53 @@ const Dispense = () => {
           ref={captchaRef}
         />
 
-        {connectedAddress ? (
-          <>
-            <p className="text-sm text-gray-700">
-              Connected wallet: <span className="font-mono">{connectedAddress}</span>
-            </p>
-            <button
-              onClick={() => handleDispense(connectedAddress)}
-              disabled={loading || !verified}
-              className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
-            >
-              {loading ? "Sending..." : "Send 0.1 ALGO"}
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              type="text"
-              placeholder="Enter Algorand Testnet address"
-              value={manualAddress}
-              onChange={(e) => setManualAddress(e.target.value)}
-              className="w-full border px-4 py-2 rounded"
-            />
-            <button
-              onClick={() => handleDispense(manualAddress)}
-              disabled={loading || !verified}
-              className="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700"
-            >
-              {loading ? "Sending..." : "Send 0.1 ALGO"}
-            </button>
-          </>
-        )}
+        <div className="mt-6 space-y-4">
+          {connectedAddress ? (
+            <>
+              <p className="text-sm text-gray-300">
+                Connected Wallet:{" "}
+                <span className="font-mono text-white">{connectedAddress}</span>
+              </p>
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => handleDispense(connectedAddress)}
+                disabled={loading || !verified}
+                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${
+                  loading || !verified ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Droplet size={18} />}
+                {loading ? "Sending..." : "Send 0.1 ALGO"}
+              </motion.button>
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                placeholder="Enter Algorand Testnet address"
+                value={manualAddress}
+                onChange={(e) => setManualAddress(e.target.value)}
+                className="w-full border border-white/20 bg-white/10 text-white placeholder-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-[#00D9A7]"
+              />
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={() => handleDispense(manualAddress)}
+                disabled={loading || !verified}
+                className={`w-full flex items-center justify-center gap-2 bg-[#00D9A7] text-white font-semibold py-2 rounded-full hover:bg-[#00c89d] transition ${
+                  loading || !verified ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {loading ? <Loader2 size={18} className="animate-spin" /> : <Droplet size={18} />}
+                {loading ? "Sending..." : "Send 0.1 ALGO"}
+              </motion.button>
+            </>
+          )}
+        </div>
 
-        {status && <p className="text-sm text-gray-700">{status}</p>}
-      </div>
+        {status && (
+          <p className="text-sm text-gray-100 mt-4 break-all font-mono">{status}</p>
+        )}
+      </motion.div>
     </div>
   )
 }
