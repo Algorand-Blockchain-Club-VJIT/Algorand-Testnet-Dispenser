@@ -4,7 +4,7 @@ import { PeraWalletConnect } from "@perawallet/connect"
 import ReCAPTCHA from "react-google-recaptcha"
 
 const peraWallet = new PeraWalletConnect()
-const SITE_KEY = "your-site-key" // <-- Replace with your Google reCAPTCHA site key (v2 checkbox)
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY!
 
 const Dispense = () => {
   const [connectedAddress, setConnectedAddress] = useState<string | null>(null)
@@ -27,8 +27,28 @@ const Dispense = () => {
   }, [])
 
   const handleDispense = async (address: string) => {
-    if (!verified) {
+    const token = captchaRef.current?.getValue()
+    if (!token) {
       setStatus("❌ Please complete the CAPTCHA")
+      return
+    }
+
+    // 🔐 Verify reCAPTCHA token with backend
+    try {
+      const verifyRes = await fetch("http://localhost:3001/verify-recaptcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      })
+
+      const verifyData = await verifyRes.json()
+
+      if (!verifyData.success) {
+        setStatus("❌ CAPTCHA verification failed")
+        return
+      }
+    } catch (err) {
+      setStatus("❌ Server error verifying CAPTCHA")
       return
     }
 
@@ -56,6 +76,7 @@ const Dispense = () => {
     setLoading(false)
     setVerified(false)
     captchaRef.current?.reset()
+    
   }
 
   return (
