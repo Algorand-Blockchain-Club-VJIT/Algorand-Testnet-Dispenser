@@ -35,7 +35,7 @@ const Dispense = () => {
 
     // 🔐 Verify reCAPTCHA token with backend
     try {
-      const verifyRes = await fetch("http://localhost:3001/verify-recaptcha", {
+      const verifyRes = await fetch("https://algorand-testnet-dispenser-backend.up.railway.app/verify-recaptcha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
