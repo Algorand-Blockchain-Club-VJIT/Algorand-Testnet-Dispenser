@@ -90,4 +90,33 @@ git push origin branch_name
 
 ---
 
+## Image Previews:
+### 1. Home:
+<img src="https://github.com/user-attachments/assets/6ec3f0b1-50a7-4130-9a89-4e2fab4ee3b2" height="300">
+<br>
+
+### 2. Wallet Connect Modal:
+<img src="https://github.com/user-attachments/assets/ef07d7a8-0a10-4d2e-9f41-f2f0139eb939" height="300">
+<br>
+
+### 3. Dispense Page:
+<img src="https://github.com/user-attachments/assets/3b4c97b2-c850-4dae-83fb-216f405644ef" height="300">
+<br>
+
+### 4. Navbar after successful wallet connection:
+<img src="https://github.com/user-attachments/assets/fde5bedb-a5bc-41d6-a911-46b1cc3ba8b7" height="300">
+<br>
+
+### 5. ReCaptcha Verification:
+<img src="https://github.com/user-attachments/assets/e738f5ca-6e12-43dd-bfb6-8562f50c93f3" height="300">
+<br>
+
+### 6. Dispense Page after successful wallet connection and transaction:
+<img src="https://github.com/user-attachments/assets/6b5d7a43-7fa4-49b7-bd32-223944cfd4e5" height="300">
+<br>
+
+### 7. Dispense Page with manual wallet address entry and successful transaction:
+<img src="https://github.com/user-attachments/assets/ad4b0c11-51cf-4530-bf93-845bbcb6a612" height="300">
+<br>
+
 ### This project deserves a star⭐, so please star the repo😅...
